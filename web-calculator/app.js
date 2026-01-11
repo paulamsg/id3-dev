@@ -1,57 +1,111 @@
-const firstNumber = [];
-const secondNumber = [];
-let typingSecond = false;
-let typeOperator = null;
-// 0BTENEMOS EL VALOR DE LA TECLA CUANDO HACEMOS CLICK
+const calculation = [];
+const calculation_join = [];
+
+let result = 0;
+const operators = ["+","-","/","%","x"];
+const operatorHTML =  document.querySelector('#operator');
+const result_showHTML =  document.querySelector('#result');
+result_showHTML.textContent = "0";
+
+
 document.querySelectorAll('.keys div').forEach(key => {
-    key.addEventListener('click', (event) => {   
+    key.addEventListener('click', (event) => {  
         let valueKey = event.currentTarget.id;
+        
         createNumbersArray(valueKey)
     });
 });
 
-// AÑADIR Q SE VEA POR PANTALLA
 function createNumbersArray(valueKey){
-    const isOperationKey = ["+","-","/","%","X"].includes(valueKey);
-    let operator = null;
-    let n1 ="";
-    let n2 ="";
-
-    if(valueKey !== "="){
-        if(isOperationKey && typingSecond===false){
-            operator = true;
-            typeOperator = valueKey;
-            typingSecond = true;
-            console.log("Operator:", typeOperator);
-            return;
-        }if (!isOperationKey && !typingSecond  ){
-            firstNumber.push(valueKey);
-            console.log("Primer numero:", firstNumber);
-            return;
-        }
-        if(typingSecond && !isOperationKey ){
-            secondNumber.push(valueKey);
-            console.log("Segundo numero:", secondNumber);
-            return;
-        }
-    }else{
-        console.log("operadorrrrr:", valueKey)
-        for(let i =0; i<firstNumber.length; i++){
-            n1 += firstNumber[i];
-            console.log("n1:", n1)
-        }
-        for(let i=0; i<secondNumber.length; i++){
-            n2 += secondNumber[i];
-            console.log("n2:", n2)
-        }
-        
+    result_showHTML.textContent = "";
+    if (valueKey === "C") {
+        result_showHTML.textContent = "0";
+        operatorHTML.textContent="";
+        calculation.length=0;
+        calculation_join.length=0;
+        return;
     }
-    console.log("NUMERO 1:",n1);
-    console.log("NUMERO 2:",n2);
-    console.log("TYPE OPERATOR:",typeOperator);
-    operations(n1,n2,typeOperator);
+    if(valueKey !== "="){
+        if(valueKey ==="%"){
+            let lastNum = "";
+            for(let i = calculation.length - 1; i >= 0 && !operators.includes(calculation[i]); i--) {
+                lastNum = calculation[i] + lastNum;
+                console.log("lastNum acumulado:", lastNum, "lastNumIndex:", i);
+            }
+            console.log("lastNum final:", lastNum);
+            if(lastNum) {
+                const percentage = Number(lastNum) / 100;
+                const itemsToRemove = lastNum.length;
+                calculation.splice(calculation.length - itemsToRemove, itemsToRemove, String(percentage));
+                console.log("Después de splice:", calculation);
+            }
+        updateDisplay();
+        return;
+        }
+        calculation.push(valueKey);
+        console.log("OPERACIONES", calculation);
+        updateDisplay();
+        return;
+    }else{
+        normalizeCalculation(calculation);
+    }
 }
 
-function operations(n1,n2, typeOperator){
-    console.log("Voy a operar con estos daots:", n1, n2, typeOperator)
+function normalizeCalculation(calculation){
+    let numbers = "";
+    for(let i = 0; i < calculation.length; i++){
+        if(!operators.includes(calculation[i])){
+            numbers += calculation[i];
+        }else{
+            if(numbers) {
+                calculation_join.push(numbers);
+                numbers = "";
+            }
+            calculation_join.push(calculation[i]); //metemos el operador
+        }
+    }
+    if(numbers) {
+        calculation_join.push(numbers);
+    }
+    console.log("ARRAY:", calculation_join);
+    operations(calculation_join);
+}
+function updateDisplay() { //mirar
+    operatorHTML.textContent = calculation.join("");
+}
+
+function operations(calculation_join){
+    operator.textContent="";
+    console.log("array que le pasamos a los calculos:", calculation_join);
+    let numbers_separated =[];
+    let operadores_separated =[];
+    for(let i=0; i< calculation_join.length;i++){
+        if(operators.includes(calculation_join[i])){
+            operadores_separated.push(calculation_join[i]);  
+            console.log("operadores:", operadores_separated)  
+        }else{
+            numbers_separated.push(calculation_join[i]);
+            console.log("numeros:", numbers_separated)
+        }
+    }
+    result = Number(numbers_separated[0]);
+    for(let i=0; i< operadores_separated.length;i++){
+        let num = numbers_separated[i + 1];
+
+        if(operadores_separated[i]==="+"){
+            result +=Number(num);
+        }
+        if(operadores_separated[i]==="-"){
+            result -= Number(num);
+        }
+        if(operadores_separated[i]==="x"){
+            result *= Number(num);
+        }
+        if(operadores_separated[i]==="/"){
+            result /= Number(num);
+        }
+    }
+
+    console.log("Resultado",result);
+    result_showHTML.textContent = result;
 }
