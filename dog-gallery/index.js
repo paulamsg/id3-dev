@@ -8,7 +8,6 @@ function randomDogName(nameDogsArray){
   console.log("nombreee:", dogName)
   return dogName;
 }
-
 function updateFilterButtonCounts() {
   nameDogsArray.forEach(name => {
     const count = perricosArray.filter(dog => dog.name === name).length;
@@ -18,21 +17,18 @@ function updateFilterButtonCounts() {
     }
   });
 }
-
 const addPerrico = async () => {
   const perricoImg = await getRandomDogImage();
   const dogName = randomDogName(nameDogsArray);
-  perricosArray.push({ image: perricoImg, name: dogName, votesPrecioso: 0, votesFeisimo: 0 });
+  perricosArray.push({ image: perricoImg, name: dogName, votesPrecioso: Math.floor(Math.random()*100), votesFeisimo: Math.floor(Math.random()*67), voteStatus : null  });
   renderPerricoArray();
   updateFilterButtonCounts();
 };
-
 const addPerrico5 = async () => {
   for(let i=0 ; i<=4; i++){
     addPerrico();
   }
 };
-
 function renderPerricoArray() {
   const dogList = document.querySelector('#dog-list');
   dogList.innerHTML = '';
@@ -41,13 +37,13 @@ function renderPerricoArray() {
       <img src="${dog.image}" alt="Perro" />
       <br />
       <p>${dog.name}</p>
-        <button class="vote-btn precioso" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso || 0})</button> 
-        <button class="vote-btn feisimo" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo || 0})</button>
+        <button class="vote-btn precioso" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso})</button> 
+        <button class="vote-btn feisimo" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo})</button>
       </div>`;
     dogList.innerHTML += htmlAdd;
   });
   document.querySelectorAll('.vote-btn').forEach(btn => {
-    btn.addEventListener('click', (event)=>{
+    btn.addEventListener('click', (event) => {
       handleVote(event);
     });
   });
@@ -57,43 +53,65 @@ function filterDog(dogNameButton){
   const dogList = document.querySelector('#dog-list');
   dogList.innerHTML='';
   if(dogNameButton){
-
     perricosArray.forEach((dog, index) => {
       if((dog.name).toLowerCase().includes(dogNameButton)){ 
         const htmlAdd = `<div class="card">
           <img src="${dog.image}" alt="Perro" />
           <br />
           <p>${dog.name}</p>
-          <button class="vote-btn precioso" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso || 0})</button> 
-          <button class="vote-btn feisimo" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo || 0})</button>
+          <button class="vote-btn precioso" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso})</button> 
+          <button class="vote-btn feisimo" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo})</button>
         </div>`;
       dogList.innerHTML += htmlAdd;
       }
     });
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+    btn.addEventListener('click', (event) => {
+      handleVote(event);
+    });
+  });
   }
 }
 
 function handleVote(event) {
   const index = parseInt(event.currentTarget.getAttribute('data-index'));
   const voteType = event.currentTarget.getAttribute('data-type');
-  if (voteType === 'precioso') {
-    const currentVotes = perricosArray[index].votesPrecioso || 0;
-    perricosArray[index].votesPrecioso = currentVotes > 0 ? currentVotes - 1 : currentVotes + 1;
-  } else if (voteType === 'feisimo') {
-    const currentVotes = perricosArray[index].votesFeisimo || 0;
-    perricosArray[index].votesFeisimo = currentVotes > 0 ? currentVotes - 1 : currentVotes + 1;
+  const dog = perricosArray[index];
+  if (dog.voteStatus === null) {
+    if (voteType === 'precioso') {
+      dog.votesPrecioso += 1;
+      dog.voteStatus = 'precioso';
+    } else if (voteType === 'feisimo') {
+      dog.votesFeisimo += 1;
+      dog.voteStatus = 'feisimo';
+    }
+  }else if (dog.voteStatus === 'precioso') {
+    if (voteType === 'precioso') {
+      dog.votesPrecioso -= 1;
+      dog.voteStatus = null;
+    } else if (voteType === 'feisimo') {
+      dog.votesPrecioso -= 1;
+      dog.votesFeisimo += 1;
+      dog.voteStatus = 'feisimo';
+    }
+  }else if (dog.voteStatus === 'feisimo') {
+    if (voteType === 'feisimo') {
+      dog.votesFeisimo -= 1;
+      dog.voteStatus = null;
+    } else if (voteType === 'precioso') {
+      dog.votesFeisimo -= 1;
+      dog.votesPrecioso += 1;
+      dog.voteStatus = 'precioso';
+    }
   }
   renderPerricoArray();
 }
-
 document.querySelector('#add-1-perrico').addEventListener('click', function () {
   addPerrico();
 });
-
 document.querySelector('#add-5-perricos').addEventListener('click', function(){
   addPerrico5();
 });
-
 document.querySelectorAll('.filter-dog').forEach((btn) => {
   btn.addEventListener('click', (event) => {
     const dogNameButton = event.currentTarget.id;
@@ -107,3 +125,4 @@ document.querySelectorAll('.filter-dog').forEach((btn) => {
     }
   });
 });
+

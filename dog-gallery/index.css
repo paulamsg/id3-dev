@@ -29,11 +29,24 @@ button {
   border-radius: 20px;;
   display: inline-block;
 }
+
+button:hover {
+  background-color: #205c8d;
+  color: white;
+  transition: all 0.3s ease;
+}
+
 .btns>button{
   cursor:pointer;
   background-color: #82a3bf;
   border: 1px solid #205c8d;
   margin-bottom: 30px;
+}
+
+.btns>button:hover{
+  background-color: #5a7fa6;
+  color: black;
+  transition: all 0.3s ease;
 }
 div {
   text-align: center;
@@ -54,10 +67,6 @@ div {
   margin: 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-}
-.card:hover{
-  scale: 1.05;
-  transition: scale 0.2s ease;
 }
 
 .card img {
