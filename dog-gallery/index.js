@@ -2,10 +2,11 @@
 const perricosArray = [];
 const nameDogsArray = ['Luna', 'Walter','Simba','Rocco','Estela'];
 
+
 function randomDogName(nameDogsArray){
   const randomIndex = Math.floor(Math.random() * nameDogsArray.length);
   const dogName = nameDogsArray[randomIndex];
-  console.log("nombreee:", dogName)
+  console.log("nombre del perro:", dogName)
   return dogName;
 }
 function updateFilterButtonCounts() {
@@ -26,7 +27,7 @@ const addPerrico = async () => {
 };
 const addPerrico5 = async () => {
   for(let i=0 ; i<=4; i++){
-    addPerrico();
+    await addPerrico();
   }
 };
 function renderPerricoArray() {
@@ -106,11 +107,30 @@ function handleVote(event) {
   }
   renderPerricoArray();
 }
-document.querySelector('#add-1-perrico').addEventListener('click', function () {
-  addPerrico();
+/*
+function disabledAllButtons(){
+  const btns = document.querySelectorAll('.add');
+  btns.forEach((bt) =>{
+    bt.disabled=true;
+  });
+}
+function enabledAllButtons(){
+  const btns = document.querySelectorAll('.add');
+  btns.forEach((bt) =>{
+    bt.disabled=false;
+  });
+}
+*/
+document.querySelector('#add-1-perrico').addEventListener('click', async function () {
+  //disabledAllButtons();
+  await addPerrico();
+  //enabledAllButtons();
+  
 });
-document.querySelector('#add-5-perricos').addEventListener('click', function(){
-  addPerrico5();
+document.querySelector('#add-5-perricos').addEventListener('click', async function(){
+  //disabledAllButtons();
+  await addPerrico5();
+  //enabledAllButtons();
 });
 document.querySelectorAll('.filter-dog').forEach((btn) => {
   btn.addEventListener('click', (event) => {
@@ -126,3 +146,8 @@ document.querySelectorAll('.filter-dog').forEach((btn) => {
   });
 });
 
+async function showApi(){
+  const breeds = await getAllBreeds();
+  console.log(breeds);
+}
+showApi();
