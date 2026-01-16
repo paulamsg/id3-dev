@@ -2,17 +2,16 @@ const calculation = [];
 const calculation_join = [];
 
 let result = 0;
+
 const operators = ["+","-","/","%","x"];
-const operatorHTML =  document.querySelector('#operator');
+const operatorHTML =  document.querySelector('#operator'); //dnd se muestra las operaciones. cmabiar nombre div
 const result_showHTML =  document.querySelector('#result');
 result_showHTML.textContent = "0";
-
 
 document.querySelectorAll('.keys div').forEach(key => {
     key.addEventListener('click', (event) => {  
         let valueKey = event.currentTarget.id;
-        
-        createNumbersArray(valueKey)
+        createNumbersArray(valueKey);
     });
 });
 
@@ -33,9 +32,11 @@ function createNumbersArray(valueKey){
                 console.log("lastNum acumulado:", lastNum, "lastNumIndex:", i);
             }
             console.log("lastNum final:", lastNum);
+            console.log("lenght",lastNum.length)
             if(lastNum) {
                 const percentage = Number(lastNum) / 100;
                 const itemsToRemove = lastNum.length;
+                console.log("CALCULARION ARRAY:", calculation)
                 calculation.splice(calculation.length - itemsToRemove, itemsToRemove, String(percentage));
                 console.log("Después de splice:", calculation);
             }
@@ -70,12 +71,12 @@ function normalizeCalculation(calculation){
     console.log("ARRAY:", calculation_join);
     operations(calculation_join);
 }
-function updateDisplay() { //mirar
+function updateDisplay() { //mirar **
     operatorHTML.textContent = calculation.join("");
 }
 
 function operations(calculation_join){
-    operator.textContent="";
+    operatorHTML.textContent="";
     console.log("array que le pasamos a los calculos:", calculation_join);
     let numbers_separated =[];
     let operadores_separated =[];
@@ -105,7 +106,6 @@ function operations(calculation_join){
             result /= Number(num);
         }
     }
-
     console.log("Resultado",result);
     result_showHTML.textContent = result;
 }
