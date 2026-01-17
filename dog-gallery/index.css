@@ -72,6 +72,33 @@ button {
   margin-top: 20px;
 }
 
+.select-breeds {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 2px solid #205c8d;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.select-breeds label {
+  font-weight: 600;
+  color: #205c8d;
+  font-size: 14px;
+}
+
+.select-breeds select {
+  padding: 8px 12px;
+  border: 1px solid #205c8d;
+  border-radius: 8px;
+  background-color: white;
+  color: #205c8d;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 200px;
+}
+
 .filter-dog {
   padding: 10px 20px;
   background-color: rgba(255, 255, 255, 0.8);

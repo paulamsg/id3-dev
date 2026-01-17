@@ -1,6 +1,22 @@
 const perricosArray = [];
 const nameDogsArray = ['Luna', 'Walter','Simba','Rocco','Estela', 'Max', 'Bella', 'Rocky', 'Daisy', 'Charlie', 'Bailey', 'Lucy', 'Buddy', 'Cooper', 'Duke', 'Molly', 'Rex', 'Zeus', 'Lola'];
 
+const selectBreed = document.getElementById('breed-select');
+
+
+async function getDogBreeds(){
+  const breeds = Object.keys(await getAllBreeds());
+  console.log("LO QUE DEVUELVE EL AWAIT:", breeds)
+  breeds.forEach(function (breed){
+    const option= document.createElement('option');
+    option.value = breed;
+    option.textContent = breed;
+    selectBreed.appendChild(option);
+  })
+  console.log("Razas de perros:",breeds);
+}
+getDogBreeds()
+
 document.querySelector('#dog-list').addEventListener('click', (event) => {
   if (event.target.classList.contains('vote-btn')) {
     handleVote(event);
@@ -155,12 +171,3 @@ function handleVote(event) {
   }
   renderPerricoArray();
 }
-
-/*
-async function showApi(){
-  const breeds = await getAllBreeds();
-  console.log(breeds);
-}
-
-showApi();
-*/
