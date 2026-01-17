@@ -3,7 +3,7 @@ const nameDogsArray = ['Luna', 'Walter','Simba','Rocco','Estela', 'Max', 'Bella'
 
 const selectBreed = document.getElementById('breed-select');
 
-
+/* LLAMADA A LA API DE RAZAS PARA METERLAS EN EL SELECT*/
 async function getDogBreeds(){
   const breeds = Object.keys(await getAllBreeds());
   console.log("LO QUE DEVUELVE EL AWAIT:", breeds)
@@ -15,8 +15,11 @@ async function getDogBreeds(){
   })
   console.log("Razas de perros:",breeds);
 }
-getDogBreeds()
+getDogBreeds();
 
+selectBreed.addEventListener('click', (event) => {
+  console.log("valor;", event.currentTarget.value);
+})
 document.querySelector('#dog-list').addEventListener('click', (event) => {
   if (event.target.classList.contains('vote-btn')) {
     handleVote(event);
