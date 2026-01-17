@@ -11,14 +11,20 @@
   <body>
     <h1>Bellezas caninas</h1>
     <div class="btns">
-      <button id="add-1-perrico" class="add">Añadir 1 perrico más</button> <button id="add-5-perricos" class="add">Añadir 5 perricos más</button>
-      <button class="filter-dog" id="luna">Luna</button>
-      <button class="filter-dog" id="walter">Walter</button>
-      <button class="filter-dog" id="simba">Simba</button>
-      <button class="filter-dog" id="rocco">Rocco</button>
-      <button class="filter-dog" id="estela">Estela</button>
+      <div class = "select-breeds">
+        <label for="breed-select">Elige una raza</label>
+          <select name="breeds" id="breed-select">
+            <option value="">Mostrar todas las razas</option>
+          </select>
+      </div>
+      <button id="add-1-perrico" class="add">Añade 1 perrito</button> 
+      <button id="add-5-perricos" class="add">Añade 5 perritos</button>
     </div>
-    <div id="dog-list"></div>
+    <div class="names-button"></div>
+    <div id="dog-list">
+      <p> Añade perritos para empezar 🐕</p>
+    </div>
+
   </body>
   <script src="./index.js"></script>
 </html>
