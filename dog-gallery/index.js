@@ -2,6 +2,7 @@ const perricosArray = [];
 const nameDogsArray = ['Luna', 'Walter','Simba','Rocco','Estela', 'Max', 'Bella', 'Rocky', 'Daisy', 'Charlie', 'Bailey', 'Lucy', 'Buddy', 'Cooper', 'Duke', 'Molly', 'Rex', 'Zeus', 'Lola'];
 
 const selectBreed = document.getElementById('breed-select');
+let valueBreedSelect;
 
 /* LLAMADA A LA API DE RAZAS PARA METERLAS EN EL SELECT*/
 async function getDogBreeds(){
@@ -17,8 +18,9 @@ async function getDogBreeds(){
 }
 getDogBreeds();
 
-selectBreed.addEventListener('click', (event) => {
-  console.log("valor;", event.currentTarget.value);
+selectBreed.addEventListener('change', (event) => {
+  valueBreedSelect = event.target.value;
+  console.log("valueBreedSelect:", valueBreedSelect);
 })
 document.querySelector('#dog-list').addEventListener('click', (event) => {
   if (event.target.classList.contains('vote-btn')) {
@@ -36,14 +38,24 @@ document.querySelector('#add-5-perricos').addEventListener('click', async functi
 });
 
 const addPerrico = async () => {
-  const perricoImg = await getRandomDogImage();
+  let perricoImg;
+  let breed; 
+  if(valueBreedSelect){ //hay raza
+    perricoImg = await getRandomDogImageByBreed(valueBreedSelect);
+    console.log("llamadaaa:",perricoImg )
+    breed = valueBreedSelect;
+  }else{ //no hay
+    perricoImg = await getRandomDogImage();
+    breed = perricoImg.split('/breeds/')[1].split('/')[0];
+  }
   const dogName = randomDogName(nameDogsArray);
-  perricosArray.push({ image: perricoImg, name: dogName, votesPrecioso: Math.floor(Math.random()*100), votesFeisimo: Math.floor(Math.random()*67), voteStatus : null  });
+  perricosArray.push({ image: perricoImg, name: dogName, breed: breed, votesPrecioso: Math.floor(Math.random()*100), votesFeisimo: Math.floor(Math.random()*67), voteStatus : null  });
+  console.log("Array",perricosArray)
   renderPerricoArray();
   addNamesButtons(dogName);
   updateFilterButtonCounts(); //arreglar
-};
 
+};
 const addPerrico5 = async () => {
   for(let i=0 ; i<=4; i++){
     await addPerrico();
@@ -103,6 +115,7 @@ function filterDog(dogNameButton){
           <img src="${dog.image}" alt="Perro" />
           <br />
           <p>${dog.name}</p>
+          <p>${dog.breed}</p>
           <button class="vote-btn precioso ${precisoPressed}" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso})</button> 
           <button class="vote-btn feisimo ${feisimoPressed}" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo})</button>
         </div>`;
@@ -123,6 +136,7 @@ function renderPerricoArray() {
       <img src="${dog.image}" alt="Perro" />
       <br />
       <p>${dog.name}</p>
+      <p>Raza: ${dog.breed}</p>
         <button class="vote-btn precioso ${precisoPressed}" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso})</button> 
         <button class="vote-btn feisimo ${feisimoPressed}" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo})</button>
       </div>`;
