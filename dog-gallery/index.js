@@ -3,7 +3,21 @@ const nameDogsArray = ['Luna', 'Walter','Simba','Rocco','Estela', 'Max', 'Bella'
 
 const input = document.getElementById("search");
 const selectBreed = document.getElementById('breed-select');
+const deletePerritos = document.getElementById('delete-perricos');
 let valueBreedSelect;
+
+function updateDisabledState(){
+    if (perricosArray.length === 0) {
+      selectBreed.classList.add('disabled');
+      input.classList.add('disabled');
+      deletePerritos.classList.add('hidden');
+    } else {
+      selectBreed.classList.remove('disabled');
+      input.classList.remove('disabled');
+      deletePerritos.classList.remove('hidden');
+    }
+}
+updateDisabledState();
 
 /* LLAMADA A LA API DE RAZAS PARA METERLAS EN EL SELECT*/
 async function getDogBreeds(){
@@ -56,18 +70,17 @@ const addPerrico = async () => {
   }
   const dogName = randomDogName(nameDogsArray);
   perricosArray.push({ image: perricoImg, name: dogName, breed: breed, votesPrecioso: Math.floor(Math.random()*100), votesFeisimo: Math.floor(Math.random()*67), voteStatus : null  });
-  console.log("Array",perricosArray)
   renderPerricoArray();
   addNamesButtons(dogName);
   updateFilterButtonCounts(); //arreglar
-
+  updateDisabledState();
 };
 const addPerrico5 = async () => {
   for(let i=0 ; i<=4; i++){
     await addPerrico();
   }
+  updateDisabledState();
 };
-
 function randomDogName(nameDogsArray){
   const randomIndex = Math.floor(Math.random() * nameDogsArray.length);
   const dogName = nameDogsArray[randomIndex];
@@ -92,7 +105,6 @@ function addNamesButtons(dogName){
   });
   addClickEventToNameButton();
 }
-
 function addClickEventToNameButton(){
   document.querySelectorAll('.filter-dog').forEach((btn) => {
   btn.addEventListener('click', (event) => {
@@ -107,7 +119,6 @@ function addClickEventToNameButton(){
     });
   });
 }
-
 function filterDog(dogNameButton){
   console.log("entramos");
   const dogList = document.querySelector('#dog-list');
@@ -131,8 +142,7 @@ function filterDog(dogNameButton){
     });
   }
 }
-
-function renderPerricoArray() {
+function renderPerricoArray() { //generic function. modify
   const dogList = document.querySelector('#dog-list');
   dogList.innerHTML = '';
   perricosArray.forEach((dog, index) => {
@@ -160,7 +170,6 @@ function deleteDogList(){
   const dogList = document.querySelector('#dog-list');
   dogList.innerHTML = '';
 }*/
-
 function searchInput(inputValue) {
   const dogList = document.querySelector("#dog-list");
   const value = inputValue.trim().toLowerCase();
