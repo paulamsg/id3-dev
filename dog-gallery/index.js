@@ -1,6 +1,7 @@
 const perricosArray = [];
 const nameDogsArray = ['Luna', 'Walter','Simba','Rocco','Estela', 'Max', 'Bella', 'Rocky', 'Daisy', 'Charlie', 'Bailey', 'Lucy', 'Buddy', 'Cooper', 'Duke', 'Molly', 'Rex', 'Zeus', 'Lola'];
 
+const input = document.getElementById("search");
 const selectBreed = document.getElementById('breed-select');
 let valueBreedSelect;
 
@@ -21,7 +22,8 @@ getDogBreeds();
 selectBreed.addEventListener('change', (event) => {
   valueBreedSelect = event.target.value;
   console.log("valueBreedSelect:", valueBreedSelect);
-})
+});
+
 document.querySelector('#dog-list').addEventListener('click', (event) => {
   if (event.target.classList.contains('vote-btn')) {
     handleVote(event);
@@ -35,6 +37,10 @@ document.querySelector('#add-1-perrico').addEventListener('click', async functio
 
 document.querySelector('#add-5-perricos').addEventListener('click', async function(){
   await addPerrico5();
+});
+
+input.addEventListener('input',(event)=>{
+  searchInput(event.currentTarget.value);
 });
 
 const addPerrico = async () => {
@@ -155,6 +161,37 @@ function deleteDogList(){
   dogList.innerHTML = '';
 }*/
 
+function searchInput(inputValue) {
+  const dogList = document.querySelector("#dog-list");
+  const value = inputValue.trim().toLowerCase();
+  // Filtramos
+  const filtered = perricosArray.filter(perrico =>
+    perrico.name.toLowerCase().includes(value) || perrico.breed.toLowerCase().includes(value)
+  );
+  if (filtered.length === 0) {
+    dogList.innerHTML = '<p style="color: red; text-align: center;">No hay nada que coincida con tu búsqueda</p>';
+    return;
+  }
+  dogList.innerHTML = '';
+  filtered.forEach((dog, index) => {
+    const precisoPressed = dog.voteStatus === 'precioso' ? 'pressed' : '';
+    const feisimoPressed = dog.voteStatus === 'feisimo' ? 'pressed' : '';
+    const htmlAdd = `<div class="card">
+      <img src="${dog.image}" alt="Perro" />
+      <br />
+      <p>${dog.name}</p>
+      <p>Raza: ${dog.breed}</p>
+      <button class="vote-btn precioso ${precisoPressed}" data-index="${index}" data-type="precioso">Preciosísimo (${dog.votesPrecioso})</button> 
+      <button class="vote-btn feisimo ${feisimoPressed}" data-index="${index}" data-type="feisimo">Feísisimo (${dog.votesFeisimo})</button>
+    </div>`;
+    dogList.innerHTML += htmlAdd;
+  });
+  document.querySelectorAll('.vote-btn').forEach(btn => {
+    btn.addEventListener('click', (event) => {
+      handleVote(event);
+    });
+  });
+}
 function handleVote(event) {
   const index = parseInt(event.currentTarget.getAttribute('data-index'));
   const voteType = event.currentTarget.getAttribute('data-type');
